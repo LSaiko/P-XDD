@@ -62,8 +62,8 @@ async def predict(file: UploadFile):
     results = model(img)[0]
     detections = [
         {
-            "class": model.names[int(b.cls)],
-            "confidence": float(b.conf),
+            "class": model.names[int(b.cls[0])],
+            "confidence": float(b.conf[0]),
             "bbox": b.xyxy[0].tolist(),
         }
         for b in results.boxes
