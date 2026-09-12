@@ -35,14 +35,22 @@ docker compose up --build
 
 `GET /health` — liveness check, independent of whether weights are loaded.
 
+## Data
+
+```bash
+pip install roboflow
+ROBOFLOW_API_KEY=your_key python prepare_data.py
+```
+
+Pulls and merges the Phase 1 datasets into `dataset/` in the layout
+`data.yaml` expects. See [DATA_SOURCES.md](DATA_SOURCES.md) for sources,
+licenses, and citations.
+
 ## Training
 
 ```bash
 python train.py
 ```
-
-Point `data.yaml` at your dataset (YOLO format — see [ROADMAP.md](ROADMAP.md)
-Phase 1 for data sources).
 
 ## Demo
 
@@ -55,6 +63,7 @@ python demo.py
 | File | Purpose |
 |---|---|
 | `main.py` | FastAPI inference server (CLAHE + YOLOv8) |
+| `prepare_data.py`, `DATA_SOURCES.md` | Download and merge training data |
 | `train.py`, `data.yaml` | Training |
 | `demo.py` | Gradio UI |
 | `test_main.py` | pytest suite (YOLO mocked) |

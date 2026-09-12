@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 dataset/
+dataset_raw/
 *.pt
 !models/.gitkeep
 .venv/

@@ -6,9 +6,14 @@ Gradio demo, pytest suite, CI. No trained weights yet — verified end-to-end
 with a pretrained COCO model.
 
 ## Phase 1 — Data
-Pull Roboflow "dental xray" datasets + the Dentex Challenge 2023 set. Target
-1k+ images per class; merge any class under 100 instances into a neighbor
-class rather than training on it directly.
+Sources identified and download/merge tooling built — see
+[DATA_SOURCES.md](DATA_SOURCES.md) and [prepare_data.py](prepare_data.py).
+4 CC BY 4.0 Roboflow datasets covering all 3 classes, including a
+DENTEX-Challenge-derived mirror for periapical_lesion. Run
+`ROBOFLOW_API_KEY=... python prepare_data.py` to actually pull the data
+(needs your own free Roboflow account key — not committed anywhere).
+Merge any class under 100 instances into a neighbor rather than training on
+it directly; the script prints per-class counts so you can check.
 
 ## Phase 2 — Baseline model
 Train `yolov8m` at imgsz 1280 / 100 epochs on the Phase 1 data. Hold out a
