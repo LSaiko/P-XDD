@@ -5,3 +5,4 @@ dataset_raw/
 *.pt
 !models/.gitkeep
 .venv/
+.env
