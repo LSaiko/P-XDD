@@ -47,6 +47,21 @@ def download(rf, source):
     )
 
 
+def to_bbox(coords):
+    """coords are the label tokens after the class id, as strings. Roboflow
+    exports either a YOLO detection box (cx, cy, w, h) or, for datasets
+    marked as instance segmentation, a polygon (x1, y1, x2, y2, ...) -
+    normalize both to a detection box, since our trainer expects boxes."""
+    nums = [float(c) for c in coords]
+    if len(nums) == 4:
+        box = nums
+    else:
+        xs, ys = nums[0::2], nums[1::2]
+        xmin, xmax, ymin, ymax = min(xs), max(xs), min(ys), max(ys)
+        box = [(xmin + xmax) / 2, (ymin + ymax) / 2, xmax - xmin, ymax - ymin]
+    return [round(v, 6) for v in box]
+
+
 def _normalize(name):
     return name.lower().replace(" ", "_")
 
@@ -84,7 +99,8 @@ def remap_and_copy(dataset_dir, counts):
                     new_id = id_map.get(old_id)
                     if new_id is None:
                         continue
-                    kept_lines.append(" ".join([str(new_id)] + parts[1:]))
+                    cx, cy, w, h = to_bbox(parts[1:])
+                    kept_lines.append(f"{new_id} {cx} {cy} {w} {h}")
                     counts[TARGET_CLASSES[new_id]] += 1
 
             out_name = f"{prefix}_{img_path.name}"
