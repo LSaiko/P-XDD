@@ -16,8 +16,19 @@ Merge any class under 100 instances into a neighbor rather than training on
 it directly; the script prints per-class counts so you can check.
 
 ## Phase 2 — Baseline model
-Train `yolov8m` at imgsz 1280 / 100 epochs on the Phase 1 data. Hold out a
-val split, record mAP50 per class as the baseline to beat.
+30-epoch baseline done (2026-09-14, `runs/detect/train9`, weights in
+`models/best.pt`): mAP50 all=0.387 — calculus 0.704 (strong), caries 0.230
+and periapical_lesion 0.228 (weak, recall 0.06-0.24). `train.py` currently
+set to `epochs=30, batch=2, workers=0` (batch/workers forced down by an
+8GB GPU + Windows spawn issues — see git history on `train.py` for the
+full debugging trail if it acts up again).
+
+**Next when resuming:** re-run longer (closer to the original 100 epochs)
+now that the pipeline's proven sound, and look at why caries/periapical
+recall is so low before trusting it — leading theory is the 65% background
+image rate (images with only out-of-scope classes like crown/filling that
+got stripped to empty labels) diluting those two classes specifically,
+since calculus's source datasets didn't have that problem.
 
 ## Phase 3 — API hardening
 Only once a real model exists: auth/rate limiting on `/predict`, structured
